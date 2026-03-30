@@ -1,3 +1,41 @@
+To compile:
+g++ main.cpp -pthread -O2
+
+To run:
+./a.out disk texture (png) sensitivity data (txt) point spread function (kernel for convolution) (png) scene parameters (txt) rendering parameters (txt) output file name (without the .png extension)
+
+Note: the number of measurements as well as the step size is hardcoded for the sensitivity data file.
+
+Example with the repo files for a 1080p render:
+./a.out ./data/adisk.png ./data/sensitivity.txt ./data/psffhd.png ./scenes/scene0.txt ./scenes/qualityH.txt rendu
+
+Example with the repo files for a 4K render:
+./a.out ./data/adisk.png ./data/sensitivity.txt ./data/psf.png ./scenes/scene0.txt ./scenes/qualityUH.txt renduHD
+
+The scene file contains in order:
+bh.a scn.camera.x scn.camera.y scn.camera.z disk.R_max disk.betamax disk.Tmax disk.texture_rep rdr.R_inf
+
+bh.a: Kerr parameter of the black hole (between 0 and 1)
+scn.camera.x scn.camera.y scn.camera.z: camera position (approximate because of Cartesian to BL conversion approximation)
+disk.R_max: maximum radius of the dust disk
+disk.betamax: velocity of the disk closest to the black hole (c = 1)
+disk.TMax: temperature of the disk closest to the black hole
+disk.texture_rep: number of repetitions of the disk texture along its length to avoid pixelation
+rdr.R_inf: distance beyond which the ray is considered at infinity and the simulation stops; must be greater than the camera distance and the disk’s maximum radius
+
+The rendering parameters file contains in order:
+rdr.width rdr.height rdr.ChunkSize rdr.stepmax rdr.stepmin rdr.delta rdr.SamplesPerPixels
+
+rdr.width: render width (horizontal size)
+rdr.height: render height (vertical size)
+rdr.chunkSize: number of pixels per block processed in parallel (must divide the total number of pixels)
+rdr.stepmax: maximum step size
+rdr.stepmin: minimum step size
+rdr.delta: angular spacing (in pixels) between rays within the same beam
+rdr.SamplesPerPixels: samples per pixel (one sample = a beam of 5 rays)
+1: no anti-aliasing
+16: very high quality
+
 Pour compiler:  g++ main.cpp -pthread -O2
 Pour executer:  ./a.out texture du disque(png) données de sensibilité(txt) fonction d'étalement du point (noyau pour la convolution)(png) parametres de la scene(txt) parametres de rendu(txt) nom du fichier de sortie(sans l'exension .png)
 
