@@ -1,3 +1,44 @@
+Install Xlib:
+sudo apt-get install libx11-dev
+
+DISPLAY=:0.0 export DISPLAY
+
+To compile:
+g++ main_rt.cpp -pthread -O2 -I/usr/include/X11/lib -L/usr/lib/x86_64-linux-gnu/ -lX11
+
+To run:
+./a.out disk texture (png) sensitivity data (txt) point spread function (kernel for convolution) (png) scene parameters (txt) rendering parameters (txt) output file name (without the .png extension)
+
+Note: the number of measurements as well as the step size is hardcoded for the sensitivity data file.
+
+Example with the repo files:
+./a.out ./data/adisk.png ./data/sensitivity.txt ./data/psf.png ./scenes/scene4.txt ./scenes/qualityH_a.txt res
+
+The scene file contains in order:
+bh.a scn.camera.x scn.camera.y scn.camera.z disk.R_max disk.betamax disk.Tmax disk.texture_rep rdr.R_inf
+
+bh.a: Kerr parameter of the black hole (between 0 and 1)
+scn.camera.x scn.camera.y scn.camera.z: camera position (approximate due to Cartesian to BL conversion approximation)
+disk.R_max: maximum radius of the dust disk
+disk.betamax: velocity of the disk closest to the black hole (in natural units)
+disk.TMax: temperature of the disk closest to the black hole
+disk.texture_rep: number of repetitions of the disk texture along its length to avoid pixelation
+rdr.R_inf: distance beyond which the ray is considered at infinity and the simulation stops; must be greater than the camera distance and the disk’s maximum radius
+
+The rendering parameters file contains in order:
+rdr.width rdr.height rdr.ChunkSize rdr.stepmax rdr.stepmin rdr.delta rdr.SamplesPerPixels
+
+rdr.width: render width (horizontal size)
+rdr.height: render height (vertical size)
+rdr.chunkSize: number of pixels per block processed in parallel (must divide the total number of pixels)
+rdr.stepmax: maximum step size
+rdr.stepmin: minimum step size
+rdr.delta: angular spacing (in pixels) between rays within the same beam
+rdr.SamplesPerPixels: samples per pixel (one sample = a beam of 5 rays)
+1: no anti-aliasing
+16: very high quality
+
+
 Installer Xlib: sudo apt-get install libx11-dev
 
 DISPLAY=:0.0
